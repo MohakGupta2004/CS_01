@@ -1,37 +1,38 @@
-# ENCRYPTION AND DECRYPTION OF A TEXT USING CAESER CIPHER - Prasunet Company
+import argparse
+
 def encrypt_text(plaintext, shift):
-    encrypt_text = ""
+    encrypted_text = ""
     for char in plaintext:
         if char.isalpha():
             isUpper = char.isupper()
             char = char.lower()
             index = ord(char) - ord('a')
-            new_index = (index+shift) % 26
-            new_char = chr(ord('a')+new_index)
-            encrypt_text+=new_char.upper() if(isUpper) else new_char
+            new_index = (index + shift) % 26
+            new_char = chr(ord('a') + new_index)
+            encrypted_text += new_char.upper() if isUpper else new_char
         else:
-            encrypt_text+=char
-    
-    return encrypt_text
-         
+            encrypted_text += char
+    return encrypted_text
+
 def decrypt_text(ciphertext, shift):
-    return encrypt_text(ciphertext,-shift)
-    
+    return encrypt_text(ciphertext, -shift)
+
 def main():
-    print("*************ENCRYPT/DECRYPTION OF A TEXT USING CAESER CIPHER*************")
-    encrypt_or_decrypt = input("What you want to do? (e for Encrypt a sentence/d for Decrypt a sentence): ")
-    if(encrypt_or_decrypt == "e"):
-        user_input = input("Enter the text you want to encrypt:")
-        shift = int(input("Enter the shift (1 to 26): "))
-        encrypted_text = encrypt_text(user_input, shift)
+    parser = argparse.ArgumentParser(description="Encrypt or decrypt a text using Caesar Cipher.")
+    parser.add_argument('-e', '--encrypt', type=str, help="Text to encrypt")
+    parser.add_argument('-d', '--decrypt', type=str, help="Text to decrypt")
+    parser.add_argument('-s', '--shift', type=int, required=True, help="Shift value (1 to 26)")
+
+    args = parser.parse_args()
+
+    if args.encrypt:
+        encrypted_text = encrypt_text(args.encrypt, args.shift)
         print(f"The Encrypted Text is: {encrypted_text}")
-    elif(encrypt_or_decrypt == 'd'):
-        user_input = input("Enter the text you want to decrypt:")
-        shift = int(input("Enter the shift (1 to 26): "))
-        encrypted_text = decrypt_text(user_input, shift)
-        print(f"The Decrypted Text is: {encrypted_text}")
+    elif args.decrypt:
+        decrypted_text = decrypt_text(args.decrypt, args.shift)
+        print(f"The Decrypted Text is: {decrypted_text}")
     else:
-        print("Type a valid Arguement!!!!")
+        print("You must specify either -e/--encrypt or -d/--decrypt with the text to process.")
 
 if __name__ == "__main__":
     main()
