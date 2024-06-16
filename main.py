@@ -1,21 +1,13 @@
 import argparse
 
-def encrypt_text(plaintext, shift):
-    encrypted_text = ""
-    for char in plaintext:
+def caesar_cipher(text, shift):
+    def shift_char(char):
         if char.isalpha():
-            isUpper = char.isupper()
-            char = char.lower()
-            index = ord(char) - ord('a')
-            new_index = (index + shift) % 26
-            new_char = chr(ord('a') + new_index)
-            encrypted_text += new_char.upper() if isUpper else new_char
-        else:
-            encrypted_text += char
-    return encrypted_text
+            offset = 65 if char.isupper() else 97
+            return chr((ord(char) - offset + shift) % 26 + offset)
+        return char
 
-def decrypt_text(ciphertext, shift):
-    return encrypt_text(ciphertext, -shift)
+    return ''.join(shift_char(char) for char in text)
 
 def main():
     parser = argparse.ArgumentParser(description="Encrypt or decrypt a text using Caesar Cipher.")
@@ -26,10 +18,10 @@ def main():
     args = parser.parse_args()
 
     if args.encrypt:
-        encrypted_text = encrypt_text(args.encrypt, args.shift)
+        encrypted_text = caesar_cipher(args.encrypt, args.shift)
         print(f"The Encrypted Text is: {encrypted_text}")
     elif args.decrypt:
-        decrypted_text = decrypt_text(args.decrypt, args.shift)
+        decrypted_text = caesar_cipher(args.decrypt, -args.shift)
         print(f"The Decrypted Text is: {decrypted_text}")
     else:
         print("You must specify either -e/--encrypt or -d/--decrypt with the text to process.")
